@@ -1,13 +1,10 @@
 # Releases
 
 <details>
-<summary>next release template</summary>
 
-## v1.xx.0 (202x-xx-xx)
+## v1.74.0 (2025-09-07)
 
 Run `make changelog` to generate content.
-
-</details>
 
 ## v1.73.0 (2025-09-02)
 
