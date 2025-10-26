@@ -360,6 +360,132 @@ describe('reducers/fetchAggregatedServiceMetrics', () => {
       };
       expect(state).toEqual(expected);
     });
+
+    it('handles undefined metrics gracefully', () => {
+      const state = metricReducer(initialState, {
+        type: `${fetchAggregatedServiceMetrics}_FULFILLED`,
+        payload: [
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_latencies',
+              type: 'GAUGE',
+              help: '0.95th quantile latency, grouped by service & operation',
+              metrics: undefined, // Test undefined metrics
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_call_rate',
+              type: 'GAUGE',
+              help: 'calls/sec, grouped by service & operation',
+              metrics: undefined,
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_error_rate',
+              type: 'GAUGE',
+              help: 'error rate, grouped by service & operation',
+              metrics: undefined,
+            },
+          },
+        ],
+      });
+
+      const expected = {
+        ...initialState,
+        operationMetricsLoading: false,
+        serviceOpsMetrics: undefined, // Should handle gracefully
+      };
+      expect(state).toEqual(expected);
+    });
+
+    it('handles null metrics gracefully', () => {
+      const state = metricReducer(initialState, {
+        type: `${fetchAggregatedServiceMetrics}_FULFILLED`,
+        payload: [
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_latencies',
+              type: 'GAUGE',
+              help: '0.95th quantile latency, grouped by service & operation',
+              metrics: null, // Test null metrics
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_call_rate',
+              type: 'GAUGE',
+              help: 'calls/sec, grouped by service & operation',
+              metrics: null,
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_error_rate',
+              type: 'GAUGE',
+              help: 'error rate, grouped by service & operation',
+              metrics: null,
+            },
+          },
+        ],
+      });
+
+      const expected = {
+        ...initialState,
+        operationMetricsLoading: false,
+        serviceOpsMetrics: undefined, // Should handle gracefully
+      };
+      expect(state).toEqual(expected);
+    });
+
+    it('handles non-array metrics gracefully', () => {
+      const state = metricReducer(initialState, {
+        type: `${fetchAggregatedServiceMetrics}_FULFILLED`,
+        payload: [
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_latencies',
+              type: 'GAUGE',
+              help: '0.95th quantile latency, grouped by service & operation',
+              metrics: 'not-an-array', // Test non-array metrics
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_call_rate',
+              type: 'GAUGE',
+              help: 'calls/sec, grouped by service & operation',
+              metrics: 'not-an-array',
+            },
+          },
+          {
+            status: 'fulfilled',
+            value: {
+              name: 'service_operation_error_rate',
+              type: 'GAUGE',
+              help: 'error rate, grouped by service & operation',
+              metrics: 'not-an-array',
+            },
+          },
+        ],
+      });
+
+      const expected = {
+        ...initialState,
+        operationMetricsLoading: false,
+        serviceOpsMetrics: undefined, // Should handle gracefully
+      };
+      expect(state).toEqual(expected);
+    });
   });
 
   it('null checks', () => {
